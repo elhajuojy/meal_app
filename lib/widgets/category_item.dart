@@ -15,10 +15,17 @@ class CategoryItem extends StatelessWidget {
   final String title;
   final Color color;
 
+  void selectcategory(BuildContext ctx) {
+    Navigator.of(ctx)
+        .pushNamed('/category_meal', arguments: {'id': id, 'title': title});
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () => selectcategory(context),
+      splashColor: Theme.of(context).primaryColor,
+      borderRadius: BorderRadius.circular(10),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
