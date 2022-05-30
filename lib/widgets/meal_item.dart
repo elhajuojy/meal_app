@@ -5,17 +5,21 @@ import 'package:meal_app/models/meal.dart';
 
 class MealItem extends StatelessWidget {
   final String imgaeUrl;
+  final String id;
   final String title;
   final int duration;
   final Complexity complexity;
   final Affordabiility affordabiility;
+  final Function removeItem;
 
   const MealItem(
-      {required this.imgaeUrl,
+      {required this.id,
+      required this.imgaeUrl,
       required this.title,
       required this.duration,
       required this.complexity,
-      required this.affordabiility});
+      required this.affordabiility,
+      required this.removeItem});
 
   String get complexityText {
     switch (complexity) {
@@ -51,13 +55,21 @@ class MealItem extends StatelessWidget {
     }
   }
 
-  void SelectMeal() {}
+  void selectedMeal(BuildContext ctx) {
+    Navigator.of(ctx)
+        .pushNamed(
+          '/MealDetailScreen',
+          arguments: id,
+        )
+        //get the value from the app which are poped
+        .then((value) => {if (value != null) removeItem(value)});
+  }
 
   @override
   Widget build(BuildContext context) {
     //inwell you cann click on this conatinaer
     return InkWell(
-      onTap: SelectMeal,
+      onTap: () => selectedMeal(context),
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
