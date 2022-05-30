@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:meal_app/dummy_data.dart';
+import 'package:meal_app/models/meal.dart';
 import 'package:meal_app/widgets/meal_item.dart';
 
 class CategoryMealScreen extends StatefulWidget {
@@ -12,6 +13,13 @@ class CategoryMealScreen extends StatefulWidget {
 }
 
 class _CategoryMealScreenState extends State<CategoryMealScreen> {
+  List<Meal>? categorymeals;
+  void _removeMeal(String mealId) {
+    setState(() {
+      categorymeals!.removeWhere((element) => element.id == mealId);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final routeArg =
@@ -19,7 +27,7 @@ class _CategoryMealScreenState extends State<CategoryMealScreen> {
     //we get the id and title of the category of meals from route arg information
     final categoryId = routeArg['id'];
     final categoryTitle = routeArg['title'];
-    final categorymeals = DUMMY_MEALS.where((meal) {
+    categorymeals = DUMMY_MEALS.where((meal) {
       return meal.categories.contains(categoryId);
     }).toList();
 
@@ -28,13 +36,15 @@ class _CategoryMealScreenState extends State<CategoryMealScreen> {
       body: ListView.builder(
         itemBuilder: (ctx, index) {
           return MealItem(
-              imgaeUrl: categorymeals[index].imageUrl,
-              title: categorymeals[index].title,
-              duration: categorymeals[index].duration,
-              complexity: categorymeals[index].complexity,
-              affordabiility: categorymeals[index].affordabiility);
+              removeItem: _removeMeal,
+              id: categorymeals![index].id,
+              imgaeUrl: categorymeals![index].imageUrl,
+              title: categorymeals![index].title,
+              duration: categorymeals![index].duration,
+              complexity: categorymeals![index].complexity,
+              affordabiility: categorymeals![index].affordabiility);
         },
-        itemCount: categorymeals.length,
+        itemCount: categorymeals!.length,
       ),
     );
   }
