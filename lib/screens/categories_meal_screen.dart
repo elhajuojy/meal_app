@@ -6,7 +6,9 @@ import 'package:meal_app/models/meal.dart';
 import 'package:meal_app/widgets/meal_item.dart';
 
 class CategoryMealScreen extends StatefulWidget {
-  const CategoryMealScreen({Key? key}) : super(key: key);
+  final List<Meal> availableMeals;
+
+  const CategoryMealScreen({super.key, required this.availableMeals});
 
   @override
   State<CategoryMealScreen> createState() => _CategoryMealScreenState();
@@ -27,7 +29,7 @@ class _CategoryMealScreenState extends State<CategoryMealScreen> {
     //we get the id and title of the category of meals from route arg information
     final categoryId = routeArg['id'];
     final categoryTitle = routeArg['title'];
-    categorymeals = DUMMY_MEALS.where((meal) {
+    categorymeals = widget.availableMeals.where((meal) {
       return meal.categories.contains(categoryId);
     }).toList();
 

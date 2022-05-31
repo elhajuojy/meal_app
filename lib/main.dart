@@ -1,92 +1,99 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:meal_app/dummy_data.dart';
+import 'package:meal_app/models/meal.dart';
+import 'package:meal_app/screens/categories_meal_screen.dart';
+import 'package:meal_app/screens/categories_screen.dart';
+import 'package:meal_app/screens/favoritesScreen.dart';
+import 'package:meal_app/screens/fliters_screen.dart';
+import 'package:meal_app/screens/meal_detail_screen.dart';
+import 'package:meal_app/screens/tabs_screen.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() => runApp(const MyApp());
+
+class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class _MyAppState extends State<MyApp> {
+  Map<String, bool> _filters = {
+    'guten': false,
+    'lactose': false,
+    'vegan': false,
+    'vegetarian': false,
+  };
+
+  List<Meal> _availableMeals = DUMMY_MEALS;
+  List<Meal> _favortieMeals = [];
+
+  void _setFilters(Map<String, bool> filterdata) {
+    setState(() {
+      _filters = filterdata;
+      _availableMeals = DUMMY_MEALS.where((meal) {
+        if (_filters['gluten'] == true && !meal.isGlutenFree) {
+          return false;
+        }
+        ;
+        if (_filters['gluten'] == true && !meal.isGlutenFree) {
+          return false;
+        }
+        ;
+        if (_filters['lactose'] == true && !meal.isLactoseFree) {
+          return false;
+        }
+        ;
+        if (_filters['vegan'] == true && !meal.isVegan) {
+          return false;
+        }
+        ;
+        if (_filters['vegetaria'] == true && !meal.isVegetarian) {
+          return false;
+        }
+        return true;
+        ;
+      }).toList();
+    });
+  }
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+    return MaterialApp(debugShowCheckedModeBanner: false, title: 'Flutter Demo',
+        // home: const MyHomePage(),
+
+        routes: {
+          '/': (context) => TabsScreen(),
+          '/category_meal': (context) => CategoryMealScreen(
+                availableMeals: _availableMeals,
+              ),
+          '/MealDetailScreen': (context) => MealDetailScreen(),
+          '/favScreen': (context) => FavoritesScreen(),
+          '/FilterScreen': (context) => FiltersScreen(
+                savefilters: _setFilters,
+                currentFilters: _filters,
+              ),
+        });
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text("meal app"),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      body: Container(),
     );
   }
 }
